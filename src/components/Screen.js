@@ -7,7 +7,14 @@ import { useTheme } from "../contexts/theme-context";
 function Screen({ children }) {
   const { theme } = useTheme();
   return (
-    <div css={{ minHeight: "100vh", display: "flex", flexFlow: "column" }}>
+    <div
+      css={{
+        minHeight: "100vh",
+        display: "flex",
+        flexFlow: "column",
+        color: theme === "light" ? colors.lightModeText : colors.white,
+      }}
+    >
       <Header />
       <div
         css={{

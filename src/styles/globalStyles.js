@@ -3,6 +3,8 @@ import * as mq from "./media-queries";
 const globalStyles = {
   "*": {
     fontWeight: 600,
+    transition: "0.16s ease-out",
+    transitionProperty: "background-color"
   },
   html: {
     [mq.sm]: {

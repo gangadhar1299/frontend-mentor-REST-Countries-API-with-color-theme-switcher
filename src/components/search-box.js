@@ -15,7 +15,7 @@ function SearchBox({ textProps, ...props }) {
         alignItems: "center",
         boxShadow,
         width: "30em",
-        padding: "1em 2em",
+        padding: "0 2em",
         borderRadius: "0.2em",
         backgroundColor:
           theme === "light" ? colors.white : colors.darkModeElements,
@@ -37,6 +37,8 @@ function SearchBox({ textProps, ...props }) {
           color: theme === "light" ? colors.lightModeInput : colors.white,
           border: "none",
           outline: "none",
+          height: "100%",
+          padding: "1em 0",
           backgroundColor: "transparent",
           "&::placeholder": {
             color: theme === "light" ? colors.lightModeInput : colors.white,

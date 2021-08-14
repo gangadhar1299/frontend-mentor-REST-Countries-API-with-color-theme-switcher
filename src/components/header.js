@@ -36,6 +36,7 @@ function Header() {
         left: 0,
         width: "100vw",
         boxShadow: boxShadow,
+        zIndex: 1
       }}
     >
       <Container

@@ -2,8 +2,6 @@
 
 import styled from "@emotion/styled";
 import {
-  Listbox,
-  ListboxArrow,
   ListboxButton,
   ListboxInput,
   ListboxList,
@@ -26,10 +24,22 @@ const StyledListboxOption = styled(ListboxOption)(
     cursor: "pointer",
     padding: "1em",
   },
-  ({ theme }) => ({
+  ({ theme = "light" }) => ({
     color: theme === "light" ? colors.lightModeText : colors.white,
+    "&[data-reach-listbox-option][data-current-nav]": {
+      backgroundColor: theme === "light" ? "#ededed" : "hsl(207, 26%, 30%)",
+    },
   })
 );
+
+export const Option = ({ children, ...props }) => {
+  const { theme } = useTheme();
+  return (
+    <StyledListboxOption theme={theme} {...props}>
+      {children}
+    </StyledListboxOption>
+  );
+};
 
 const StyledListboxList = styled(ListboxList)({
   boxShadow,
@@ -47,14 +57,14 @@ const StyledListboxButton = styled(ListboxButton)(
     justifyContent: "space-between",
     alignItems: "center",
   },
-  ({theme}) => ({
+  ({ theme }) => ({
     color: theme === "light" ? colors.lightModeText : colors.white,
   })
 );
 
 const StyledListboxInput = styled(ListboxInput)({});
 
-export function Select({ value, onChange = () => {} }) {
+export function Select({ value, onChange = () => {}, children }) {
   const { theme } = useTheme();
   return (
     <div
@@ -75,7 +85,7 @@ export function Select({ value, onChange = () => {} }) {
             justifyContent: "space-between",
           }}
         >
-          <StyledListboxButton arrow={FaAngleDown} theme={theme} />
+          <StyledListboxButton arrow={<FaAngleDown />} theme={theme} />
         </div>
         <ListboxPopover>
           <StyledListboxList
@@ -84,18 +94,7 @@ export function Select({ value, onChange = () => {} }) {
                 theme === "light" ? colors.white : colors.darkModeElements,
             }}
           >
-            <StyledListboxOption value={"bojangles"} theme={theme}>
-              Bojangles'
-            </StyledListboxOption>
-            <StyledListboxOption value="churchs" theme={theme}>
-              Church's
-            </StyledListboxOption>
-            <StyledListboxOption value="kfc" theme={theme}>
-              KFC
-            </StyledListboxOption>
-            <StyledListboxOption value="popeyes" theme={theme}>
-              Popeyes
-            </StyledListboxOption>
+            {children}
           </StyledListboxList>
         </ListboxPopover>
       </StyledListboxInput>
