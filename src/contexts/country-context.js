@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react/cjs/react.production.min";
 
 const CountryContext = React.createContext();
 CountryContext.displayName = "CountryContext";
@@ -12,11 +11,13 @@ function useCountry() {
 
 function CountryProvider({ children }) {
   const [countrySearch, setCountrySearch] = React.useState("");
-  const [region, setRegion] = useState("Filter by Region");
+  const [region, setRegion] = React.useState(null);
 
-  const value = { countrySearch };
+  const value = { countrySearch, setCountrySearch, region, setRegion };
 
-  return <CountryContext.Provider>{children}</CountryContext.Provider>;
+  return (
+    <CountryContext.Provider value={value}>{children}</CountryContext.Provider>
+  );
 }
 
 export { useCountry, CountryProvider };

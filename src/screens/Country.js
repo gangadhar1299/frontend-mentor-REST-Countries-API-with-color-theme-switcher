@@ -89,7 +89,10 @@ function CountryScreen() {
               >
                 <div>
                   <DetailRow label="Native Name" value={country.nativeName} />
-                  <DetailRow label="Population" value={country.population} />
+                  <DetailRow
+                    label="Population"
+                    value={Number(country.population).toLocaleString("en-us")}
+                  />
                   <DetailRow label="Region" value={country.region} />
                   <DetailRow label="Sub Region" value={country.subregion} />
                   <DetailRow label="Capital" value={country.capital} />

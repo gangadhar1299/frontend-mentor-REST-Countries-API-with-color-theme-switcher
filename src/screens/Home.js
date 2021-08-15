@@ -11,18 +11,23 @@ import { useTheme } from "../contexts/theme-context";
 import { SearchBox } from "../components/search-box";
 import { Link } from "react-router-dom";
 import * as mq from "../styles/media-queries";
+import { CountryProvider, useCountry } from "../contexts/country-context";
 
 function HomeScreen() {
   return (
-    <Screen>
-      <SearchFilter />
-      <Countries />
-    </Screen>
+    <CountryProvider>
+      <Screen>
+        <main>
+          <SearchFilter />
+          <Countries />
+        </main>
+      </Screen>
+    </CountryProvider>
   );
 }
 
 function SearchFilter() {
-  const [value, setValue] = React.useState();
+  const { region, setRegion, countrySearch, setCountrySearch } = useCountry();
   return (
     <Container>
       <div
@@ -34,10 +39,16 @@ function SearchFilter() {
           gap: "2em 1em",
         }}
       >
-        <SearchBox />
-        <Select value={value} onChange={console.log}>
-          <Option value="a">A</Option>
-          <Option value="b">B</Option>
+        <SearchBox
+          value={countrySearch}
+          onChange={(evt) => setCountrySearch(evt.target.value)}
+        />
+        <Select value={region} onChange={setRegion}>
+          <Option value="Africa">Africa</Option>
+          <Option value="Americas">America</Option>
+          <Option value="Asia">Asia</Option>
+          <Option value="Europe">Europe</Option>
+          <Option value="Oceania">Oceania</Option>
         </Select>
       </div>
     </Container>
@@ -45,8 +56,26 @@ function SearchFilter() {
 }
 
 function Countries() {
+  const { countrySearch, region } = useCountry();
   const { status, data: countries } = useQuery("countries", getCountries);
+
+  function filterByRegion(country) {
+    if (!region) return true;
+    return country.region === region;
+  }
+
+  function filterByName(country) {
+    return country.name.toLowerCase().startsWith(countrySearch.toLowerCase());
+  }
+
+  function filterCountry(country) {
+    return filterByName(country) && filterByRegion(country);
+  }
+
+  const filteredCountries = countries ? countries.filter(filterCountry) : [];
+
   if (status === "loading" || status === "idle") return <h1>loading...</h1>;
+
   return (
     <Container>
       <div
@@ -59,7 +88,7 @@ function Countries() {
           paddingBottom: "3em",
         }}
       >
-        {countries.map((country) => (
+        {filteredCountries.map((country) => (
           <div key={country.alpha3Code} title={country.name}>
             <Link
               to={`/country/${country.alpha3Code}`}
@@ -97,7 +126,6 @@ function CountryCard({ country }) {
           src={flag}
           alt={name}
           css={{
-            height: "10em",
             width: "100%",
             transition: "0.37s ease-in-out",
             [mq.sm]: {
@@ -145,7 +173,10 @@ function CountryCard({ country }) {
       >
         <div css={{ fontSize: "1.1em" }}>{name}</div>
         <div css={{ marginTop: "1em" }}>
-          <DetailRow label="Population" value={population} />
+          <DetailRow
+            label="Population"
+            value={Number(population).toLocaleString("en-us")}
+          />
           <DetailRow label="Region" value={region} />
           <DetailRow label="Capital" value={capital} />
         </div>
